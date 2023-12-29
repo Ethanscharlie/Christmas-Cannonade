@@ -1,0 +1,4 @@
+Cannon Fire Sound "explosion_full.wav" by Iwan Gabovitch licensed CC0: https://opengameart.org/content/dull-explosion
+Tree Hit Sound "sd_0.wav" by Brandon75689 licensed OGA-BY 3.0, CC0: https://opengameart.org/content/point-bell
+Spike Hit / Reset Sound "coldsnap.wav" by bart licensed CC0: https://opengameart.org/content/ice-spells
+Music "azure.mp3" by Kistol licensed CC-BY 4.0: https://opengameart.org/content/azure
