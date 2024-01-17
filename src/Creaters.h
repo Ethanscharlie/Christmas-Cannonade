@@ -18,7 +18,7 @@ void createPlayButton(Entity *canvas) {
   box->setScale({500, 20 * 4});
   box->setLocalWithCenter({0, 300});
 
-  UISliceRenderer *slice = entity->add<UISliceRenderer>();
+  SimpleImGuiPanel *slice = entity->add<SimpleImGuiPanel>();
 
   Text *text = entity->add<Text>();
   text->changeFont("img/fonts/prstart.ttf", 20);
@@ -38,4 +38,3 @@ Entity *createGift(Vector2f position, Vector2f direction, float force,
   entity->add<Gift>()->firedFrom = firedFrom;
   return entity;
 }
-

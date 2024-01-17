@@ -1,19 +1,4 @@
-#include "Camera.h"
 #include "Charlie2D.h"
-#include "Component.h"
-#include "Entity.h"
-#include "EntityBox.h"
-#include "InputManager.h"
-#include "JumpMan.h"
-#include "LDTKEntity.h"
-#include "SDL_keycode.h"
-#include "SDL_mixer.h"
-#include "SDL_timer.h"
-#include "Text.h"
-#include "UICanvas.h"
-#include "UISliceRenderer.h"
-#include "Vector2f.h"
-#include "physicsBody.h"
 #include <cmath>
 #include <format>
 #include <sstream>
@@ -38,10 +23,12 @@ void loadMenuScene() {
 
   createPlayButton(canvas);
 
-  Entity *infoPanel = createUIPanel(canvas, {0, 0, 256 * 3, 400},
-                                    "Aim and fire cannons with Mouse\n\n \
-      Mouse distance from cannon = Fire force\n\nSpace to reset Gift\n\nR to reset GAME");
+  Entity *infoPanel = Templates::createUIPanel(
+      canvas, {0, 0, 256 * 3, 500}, "Aim and fire cannons with Mouse\n\n \
+      Mouse distance from cannon = Fire force\n\nSpace to reset Gift\n\nR to reset GAME\n\nCLICK OF THE LEFT OR TOP OF THE SCREEN TO FIX KEYBOARD");
+
   infoPanel->get<entityBox>()->setLocalWithCenter({0, 0});
+  // infoPanel->add<TransformEdit>();
 }
 
 void loadEndScene() {
@@ -61,9 +48,10 @@ void loadEndScene() {
   float runTime = (SDL_GetTicks() - runTimerStart) / 1000.0f;
   runTime = std::round(runTime * 100.0f) / 100.0f;
 
-  Entity *infoPanel = createUIPanel(canvas, {0, 0, 256 * 3, 400},
-                                    "The End!\n\nThanks for playing\n\nTime: " +
-                                        floatToString(runTime) + " seconds!");
+  Entity *infoPanel = Templates::createUIPanel(
+      canvas, {0, 0, 256 * 3, 400},
+      "The End!\n\nThanks for playing\n\nTime: " + floatToString(runTime) +
+          " seconds!");
   infoPanel->get<entityBox>()->setLocalWithCenter({0, 0});
 }
 
@@ -94,8 +82,8 @@ void loadGameScene() {
   Entity *canvas = GameManager::createEntity("canvas");
   canvas->add<UICanvas>();
 
-  Entity *timerPanel =
-      createUIPanel(canvas, {0, 0, 64 * 4, 15 * 4}, "TIMER", "timerPanel");
+  Entity *timerPanel = Templates::createUIPanel(canvas, {0, 0, 64 * 4, 15 * 4},
+                                                "TIMER", "timerPanel");
   timerPanel->get<entityBox>()->anchor = 1;
   timerPanel->get<entityBox>()->setLocalWithCenter({0, 16 * 2});
 

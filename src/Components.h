@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "EntityBox.h"
 #include "Vector2f.h"
+#include "imguiUtils.h"
 #include "toBeEnginized.h"
 #include <cmath>
 

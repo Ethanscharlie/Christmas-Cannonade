@@ -5,6 +5,7 @@ project(index)
 
 # set the C++ standard to C++11
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #
 # set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_SYSTEM_NAME Windows)
@@ -14,7 +15,9 @@ set(CMAKE_CXX_STANDARD 20)
 # get all source files
 file(GLOB_RECURSE OBJECTS_SOURCES src/objects/*.cpp)
 file(GLOB_RECURSE SCENE_SOURCES src/scenes/*.cpp)
+
 file(GLOB_RECURSE CHARLIE_SOURCES /home/ethanscharlie/Projects/Code/Github/charlie2d/source/*.cpp)
+file(GLOB_RECURSE IMGUI_SOURCES /home/ethanscharlie/Projects/Code/Github/charlie2d/imgui/*.cpp)
 
 # add the executable
 add_executable(index
@@ -22,6 +25,7 @@ add_executable(index
     ${OBJECTS_SOURCES}
     ${SCENE_SOURCES}
     ${CHARLIE_SOURCES}
+    ${IMGUI_SOURCES}
 )
  
 # add include directories
@@ -30,6 +34,10 @@ target_include_directories(index PUBLIC
     /usr/include/nlohmann
     #/home/ethanscharlie/Projects/Code/C++/Charlie2D/include
     /home/ethanscharlie/Projects/Code/Github/charlie2d/include
+    /home/ethanscharlie/Projects/Code/Github/charlie2d/include/core
+    /home/ethanscharlie/Projects/Code/Github/charlie2d/include/components
+    /home/ethanscharlie/Projects/Code/Github/charlie2d/include/imgui
+    /home/ethanscharlie/Projects/Code/Github/charlie2d/imgui
     ${PROJECT_SOURCE_DIR}/include 
     ${PROJECT_SOURCE_DIR}/src/engine 
     ${PROJECT_SOURCE_DIR}/src/objects 
