@@ -1,12 +1,15 @@
 #include "Charlie2D.h"
 #include "Components.h"
+#include "Math.h"
+#include "physicsBody.h"
+#include <cstdlib>
 
 void createBackground(const Box &setToBox) {
   Entity *background = GameManager::createEntity("Background");
   background->add<Sprite>()->loadTexture("img/background.png");
   background->get<entityBox>()->setPosition(setToBox.position);
   background->get<entityBox>()->setSize(setToBox.size);
-  background->layer = -1;
+  background->layer = -10;
 }
 
 void createPlayButton(Entity *canvas) {
@@ -25,6 +28,20 @@ void createPlayButton(Entity *canvas) {
   text->text = "Press Space to Play";
 
   entity->add<StartMenuDetecter>();
+}
+
+Entity *createSnowflake() {
+  Entity *entity = GameManager::createEntity("Snowflake");
+  entity->add<Sprite>()->loadTexture("img/Snowflake.png");
+  entity->get<entityBox>()->setSize({3, 3});
+  entity->layer = -1;
+
+  entity->add<Snowflake>();
+
+  float randomXPos = randFloat(0, GameManager::gameWindowSize.x);
+  entity->get<entityBox>()->setWithCenter({randomXPos, 0});
+
+  return entity;
 }
 
 Entity *createGift(Vector2f position, Vector2f direction, float force,

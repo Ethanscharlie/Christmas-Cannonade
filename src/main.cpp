@@ -28,7 +28,6 @@ void loadMenuScene() {
       Mouse distance from cannon = Fire force\n\nSpace to reset Gift\n\nR to reset GAME\n\nCLICK OF THE LEFT OR TOP OF THE SCREEN TO FIX KEYBOARD");
 
   infoPanel->get<entityBox>()->setLocalWithCenter({0, 0});
-  // infoPanel->add<TransformEdit>();
 }
 
 void loadEndScene() {
@@ -118,7 +117,7 @@ void loadGameScene() {
     }
   };
 
-  LDTK::loadLevel(LDTK::fullJSON["levels"][0]["iid"], false);
+  LDTK::loadLevel(LDTK::fullJSON["worlds"][0]["levels"][0]["iid"], false);
 }
 
 int main() {

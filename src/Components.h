@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Entity.h"
 #include "EntityBox.h"
+#include "Scheduler.h"
 #include "Vector2f.h"
 #include "imguiUtils.h"
 #include "toBeEnginized.h"
@@ -24,7 +25,7 @@ public:
     if (entity->get<entityBox>()->getBox().checkCollision(
             tree->get<entityBox>()->getBox())) {
 
-      if (LDTK::fullJSON["levels"].size() - 1 > currentLevel) {
+      if (LDTK::fullJSON["worlds"][0]["levels"].size() - 1 > currentLevel) {
         currentLevel++;
       } else {
         currentLevel = 0;
@@ -41,12 +42,15 @@ public:
           std::cout << "Found" << std::endl;
           continue;
         }
+        if (entityO->tag == "Snowflake") {
+          continue;
+        }
         entityO->toDestroy = true;
       }
 
       GameManager::playSound(TREE_HIT_SOUND);
 
-      LDTK::loadLevel(LDTK::fullJSON["levels"][currentLevel]["iid"], false);
+      LDTK::loadLevel(LDTK::fullJSON["worlds"][0]["levels"][currentLevel]["iid"], false);
     }
 
     checkKill("Kill");
@@ -161,9 +165,30 @@ public:
   const std::string armedTexture = "img/armedCannon.png";
 };
 
+Entity *createSnowflake();
+
+class Snowflake : public Component {
+public:
+  void start() override {}
+
+  void update(float deltaTime) override {
+    entity->get<entityBox>()->changePosition(move * deltaTime);
+    if (!entity->get<entityBox>()->getBox().checkCollision(LDTK::worldBox)) {
+      entity->toDestroy = true;
+    }
+  }
+
+  Vector2f move = {100, 400};
+};
+
 class God : public Component {
 public:
-  void update(float deltaTime) {
+  void start() override {
+    entity->add<Scheduler>()->addSchedule("snowflake", 15,
+                                          []() { createSnowflake(); });
+  }
+
+  void update(float deltaTime) override {
     if (InputManager::checkInput("jumpTrigger")) {
       GameManager::playSound(GIFT_RESET_SOUND);
       reset();

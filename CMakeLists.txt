@@ -19,14 +19,21 @@ file(GLOB_RECURSE SCENE_SOURCES src/scenes/*.cpp)
 file(GLOB_RECURSE CHARLIE_SOURCES /home/ethanscharlie/Projects/Code/Github/charlie2d/source/*.cpp)
 file(GLOB_RECURSE IMGUI_SOURCES /home/ethanscharlie/Projects/Code/Github/charlie2d/imgui/*.cpp)
 
-# add the executable
-add_executable(index
+if (EMSCRIPTEN) 
+  add_executable(index
     src/main.cpp
     ${OBJECTS_SOURCES}
     ${SCENE_SOURCES}
     ${CHARLIE_SOURCES}
     ${IMGUI_SOURCES}
-)
+  )
+else()
+  add_executable(index
+    src/main.cpp
+    ${OBJECTS_SOURCES}
+    ${SCENE_SOURCES}
+  )
+endif()
  
 # add include directories
 target_include_directories(index PUBLIC
@@ -52,7 +59,6 @@ target_link_libraries(index
     SDL2
     SDL2_ttf
     SDL2_mixer
-    # ${CHARLIE_LIB}
 )
 
 # copy image directory to build directory
@@ -84,6 +90,7 @@ if (EMSCRIPTEN)
 else()
     target_link_libraries(index
         SDL2_image
-)
+        ${CHARLIE_LIB}
+    )
 endif()
 

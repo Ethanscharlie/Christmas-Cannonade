@@ -5,6 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Emscripten-Generated Code</title>
     <style>
+      body {
+        color: white;
+        background-color: black
+      }
+
+      progress {
+        width: 80%;
+      }
+
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       textarea.emscripten { font-family: monospace; width: 80%; }
       div.emscripten { text-align: center; }
@@ -13,52 +22,19 @@
       canvas.emscripten { border: 0px none; background-color: black; }
 
       .spinner {
-        height: 200px;
-        width: auto;
-        margin: 0px auto;
-        position: absolute;
+        width: 90%;
+        height: auto;
+        margin: auto;
+        image-rendering: pixelated;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
-
-      .spinnerBAK {
-        height: 50px;
-        width: 50px;
-        margin: 0px auto;
-        -webkit-animation: rotation .8s linear infinite;
-        -moz-animation: rotation .8s linear infinite;
-        -o-animation: rotation .8s linear infinite;
-        animation: rotation 0.8s linear infinite;
-        border-left: 10px solid rgb(0,150,240);
-        border-right: 10px solid rgb(0,150,240);
-        border-bottom: 10px solid rgb(0,150,240);
-        border-top: 10px solid rgb(100,0,200);
-        border-radius: 100%;
-        background-color: rgb(200,100,250);
-      }
-      @-webkit-keyframes rotation {
-        from {-webkit-transform: rotate(0deg);}
-        to {-webkit-transform: rotate(360deg);}
-      }
-      @-moz-keyframes rotation {
-        from {-moz-transform: rotate(0deg);}
-        to {-moz-transform: rotate(360deg);}
-      }
-      @-o-keyframes rotation {
-        from {-o-transform: rotate(0deg);}
-        to {-o-transform: rotate(360deg);}
-      }
-      @keyframes rotation {
-        from {transform: rotate(0deg);}
-        to {transform: rotate(360deg);}
-      }
-
     </style>
   </head>
   <body>
     <figure style="overflow:visible;" id="spinner">
         <img class="spinner" src="img/PixilEthan.png" alt="Logo">
-      <center style="margin-top:0.5em">
-        <strong>emscripten</strong>
-      </center>
     </figure>
     <div class="emscripten" id="status">Downloading...</div>
     <div class="emscripten">
@@ -67,34 +43,6 @@
     <div class="emscripten_border">
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
     </div>
-    <script type="text/javascript">
-        //emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, 0, 1, function(event) {                                                   
-        //    var width = event.w;                                                                                                                 
-        //    var height = event.h;                                                                                                                
-        //    console.log(`New size: ${width}x${height}`);                                                                                         
-        //    return 1;                                                                                                                            
-        //});                                                                                                                                      
-
-        //var statusElement = document.getElementById('status');
-        //var progressElement = document.getElementById('progress');
-        //var spinnerElement = document.getElementById('spinner');
-
-        //// ...
-
-        //    // JavaScript function to register the fullscreenchange event callback
-        //function registerFullscreenChangeCallback() {
-        //    emscripten_set_fullscreenchange_callback("#canvas", null, false, fullscreenchange_callback);
-        //}
-
-        //// Callback function to handle the fullscreen change event
-        //function fullscreenChangeCallback(eventType, someEvent, userData) {
-        //    // Handle the fullscreen change event here
-        //    // You can call C++ functions from here if needed
-        //}
-
-        //// Call the registration function when the page loads
-        //registerFullscreenChangeCallback();
-    </script>
 
     <script type='text/javascript'>
       var statusElement = document.getElementById('status');
