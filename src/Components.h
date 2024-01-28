@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Entity.h"
 #include "EntityBox.h"
+#include "GameManager.h"
 #include "Scheduler.h"
 #include "Vector2f.h"
 #include "imguiUtils.h"
@@ -25,7 +26,8 @@ public:
     if (entity->get<entityBox>()->getBox().checkCollision(
             tree->get<entityBox>()->getBox())) {
 
-      if (LDTK::fullJSON["worlds"][0]["levels"].size() - 1 > currentLevel) {
+      if (LDTK::fullJSON["worlds"][currentWorld]["levels"].size() - 1 >
+          currentLevel) {
         currentLevel++;
       } else {
         currentLevel = 0;
@@ -50,7 +52,9 @@ public:
 
       GameManager::playSound(TREE_HIT_SOUND);
 
-      LDTK::loadLevel(LDTK::fullJSON["worlds"][0]["levels"][currentLevel]["iid"], false);
+      LDTK::loadLevel(
+          LDTK::fullJSON["worlds"][currentWorld]["levels"][currentLevel]["iid"],
+          false);
     }
 
     checkKill("Kill");
@@ -98,6 +102,7 @@ public:
 
   void update(float deltaTime) override {
     if (hasGift) {
+      Camera::setPosition(entity->get<entityBox>()->getBox().getCenter());
       rotation.lookAt(entity->get<entityBox>()->getBox().getCenter(),
                       InputManager::getMouseWorldPosition());
       entity->get<Sprite>()->angle = rotation;
@@ -238,6 +243,8 @@ public:
 class MovePoint : public Component {
 public:
   void update(float deltaTime) override {
+    if (disable)
+      return;
     Vector2f currentPosition = entity->get<entityBox>()->getBox().getCenter();
     if (movingToEnd) {
       // Check Past
@@ -258,10 +265,95 @@ public:
   }
 
   bool movingToEnd = true;
+  bool disable = false;
 
   float speed = 60.0f;
   Vector2f startPoint;
   Vector2f endPoint;
 
   const float lowSpeed = 8;
+};
+
+class Portal : public Component {
+public:
+  void start() override {}
+
+  void update(float deltaTime) override {
+    for (Gift *gift : GameManager::getComponents<Gift>()) {
+      if (!entity->add<entityBox>()->getBox().checkCollision(
+              gift->entity->get<entityBox>()->getBox()))
+        continue;
+      if (otherPortal == nullptr)
+        continue;
+      if (!readyForTeleport)
+        continue;
+      if (!otherPortal->readyForTeleport)
+        continue;
+
+      gift->entity->get<entityBox>()->setPosition(
+          otherPortal->entity->get<entityBox>()->getPosition());
+      readyForTeleport = false;
+      entity->add<Scheduler>()->addSchedule(
+          "PortalCooldown", 300, [this]() { readyForTeleport = true; }, true);
+    }
+
+    if (!entity->get<Sprite>()->animations["general"]->playing) {
+      entity->get<Sprite>()->animations["general"]->play();
+    }
+  }
+
+  bool readyForTeleport = true;
+  Portal *otherPortal = nullptr;
+};
+
+class Slime : public Component {
+public:
+  void start() override {}
+
+  void update(float deltaTime) override {
+    for (Gift *gift : GameManager::getComponents<Gift>()) {
+      if (!entity->add<entityBox>()->getBox().checkCollision(
+              gift->entity->get<entityBox>()->getBox()))
+        continue;
+      if (!readyForTeleport)
+        continue;
+
+      gift->entity->get<physicsBody>()->velocity *= -1;
+      readyForTeleport = false;
+      entity->add<Scheduler>()->addSchedule(
+          "PortalCooldown", 100, [this]() { readyForTeleport = true; }, true);
+    }
+  }
+
+  bool readyForTeleport = true;
+};
+
+class Glime : public Component {
+public:
+  void start() override {}
+
+  void update(float deltaTime) override {
+    for (Gift *gift : GameManager::getComponents<Gift>()) {
+      if (!entity->add<entityBox>()->getBox().checkCollision(
+              gift->entity->get<entityBox>()->getBox()))
+        continue;
+      if (!readyForTeleport)
+        continue;
+
+      Vector2f velo = gift->entity->get<physicsBody>()->velocity;
+      gift->entity->get<physicsBody>()->velocity = {velo.y, velo.x};
+      gift->entity->get<entityBox>()->setPosition(
+          entity->get<entityBox>()->getPosition());
+
+      // if (velo.x <= 0 && velo.y <= 0) {
+      //   GameManager::getComponents<God>()[0]->reset();
+      // }
+
+      readyForTeleport = false;
+      entity->add<Scheduler>()->addSchedule(
+          "PortalCooldown", 100, [this]() { readyForTeleport = true; }, true);
+    }
+  }
+
+  bool readyForTeleport = true;
 };

@@ -4,6 +4,7 @@
 #include <string>
 
 int currentLevel = 0;
+int currentWorld = 1;
 Uint32 runTimerStart = 0;
 
 const std::string CANNON_FIRE_SOUND = "img/sound/explosion_dull.wav";

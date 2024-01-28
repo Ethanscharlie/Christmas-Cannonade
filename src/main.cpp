@@ -25,7 +25,7 @@ void loadMenuScene() {
 
   Entity *infoPanel = Templates::createUIPanel(
       canvas, {0, 0, 256 * 3, 500}, "Aim and fire cannons with Mouse\n\n \
-      Mouse distance from cannon = Fire force\n\nSpace to reset Gift\n\nR to reset GAME\n\nCLICK OF THE LEFT OR TOP OF THE SCREEN TO FIX KEYBOARD");
+      Mouse distance from cannon = Fire force\n\nSpace to reset Gift\n\nR to reset GAME");
 
   infoPanel->get<entityBox>()->setLocalWithCenter({0, 0});
 }
@@ -67,6 +67,10 @@ void addLDTKFields(Entity *entity) {
       entity->add<MovePoint>()->endPoint = end * 16 + 8;
     } else if (field["__identifier"] == "moveSpeed") {
       entity->add<MovePoint>()->speed = (float)field["__value"];
+    }
+
+    if (field["__identifier"] == "movePoint" && field["__value"].is_null()) {
+      entity->add<MovePoint>()->disable = true; 
     }
   }
 }
@@ -113,11 +117,24 @@ void loadGameScene() {
         entity->add<Sprite>()->loadTexture("img/star.png");
         entity->get<entityBox>()->setScale({14, 14});
         addLDTKFields(entity);
+      } else if (entity->tag == "Portal") {
+        json field = entity->get<LDTKEntity>()->entityJson["fieldInstances"][0];
+        addLDTKFields(entity);
+        Vector2f BPortalPosition = Vector2f(field["__value"]["cx"], field["__value"]["cy"]) * 16; 
+        createPortal(entity, entity->get<entityBox>()->getPosition(), BPortalPosition);
+      } else if (entity->tag == "Slime") {
+        entity->add<Sprite>()->loadTexture("img/Slice.png");
+        entity->add<Slime>();
+        addLDTKFields(entity);
+      } else if (entity->tag == "Glime") {
+        entity->add<Sprite>()->loadTexture("img/Glime.png");
+        entity->add<Glime>();
+        addLDTKFields(entity);
       }
     }
   };
 
-  LDTK::loadLevel(LDTK::fullJSON["worlds"][0]["levels"][0]["iid"], false);
+  LDTK::loadLevel(LDTK::fullJSON["worlds"][currentWorld]["levels"][0]["iid"], false);
 }
 
 int main() {
